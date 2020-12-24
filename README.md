@@ -14,10 +14,27 @@ yarn start
 
 ### Redux Integration
 
-For redux integration replace **index.js** file with code below :
+For redux integration replace **\_app.js** file with code below :
 
 ```bash
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import reducers from "../redux/reducers";
 
+import "../sass/main.scss";
+
+const store = createStore(reducers, applyMiddleware(thunk));
+
+function App({ Component, pageProps }) {
+  return (
+    <Provider store={store}>
+      <Component {...pageProps} />
+    </Provider>
+  );
+}
+
+export default App;
 ```
 
 **package.json** file doesn't have **redux, react-redux, redux-thunk** by default. You should install it if you want above code to work.
