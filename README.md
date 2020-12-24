@@ -1,34 +1,150 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Boilerplate for next
+
+> Official boilerplate for next app with next-auth-navigaton & react-uicomp
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm run dev
+npm start
 # or
-yarn dev
+yarn start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Redux Integration
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+For redux integration replace **index.js** file with code below :
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+```bash
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```
 
-## Learn More
+**package.json** file doesn't have **redux, react-redux, redux-thunk** by default. You should install it if you want above code to work.
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Install redux
+npm i redux
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Install react-redux
+npm i react-redux
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+# Install redux-thunk
+npm i redux-thunk
+```
 
-## Deploy on Vercel
+### Useful packages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Here are some useful packages that you want to use :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**react-icons** - has all icons that we need
+
+```bash
+npm i react-icons
+```
+
+**react-hook-form** - for form validation
+
+```bash
+npm i react-hook-form
+```
+
+### API Calls
+
+To do API Calls, we need to create an **api** function from **apiGenerator** function available in _src/helpers/Helpers.js_.
+
+```js
+// Api.config.js
+
+import { apiGenerator } from "../helpers/Helpers";
+
+const token = getCookie("token"); // GET TOKEN FROM COOKIE
+export const BASE_URL = "http://192.168.1.1:8000"; // BASE URL
+
+export const api = apiGenerator({ token, baseURL: BASE_URL }); // API FUNCTION
+```
+
+Now you can use this **api** function in any actions or anywhere you want to do api calls. The API Reference for **api** function is :
+
+```js
+api(url, method, body, config);
+```
+
+- url - _end-point URL_
+- method ( optional ) Default: **GET**
+- body ( optional )
+- config ( optional ) - _config object with following properties_
+  - file ( optional ) - **true** to upload file, otherwise **false**
+  - fileUploadProgress (optional) - function which is called with one parameter i.e. **percentage** while uploading
+  - fileDownloadProgress (optional) - function which is called with one parameter i.e. **percentage** while downloading
+
+**Example**
+
+```js
+// Sample.action.js
+import { api } from "../config/Config";
+...
+
+dispatch({ type: SAMPLE.LOADING });
+
+res = await api(`${APIS.sample}`, "POST", formData, {
+    file: true,
+    fileUploadProgress: function(percentage) {
+        dispatch({ type: SAMPLE.PROGRESS, payload: percentage });
+    }
+});
+
+const { success } = res.data; // res.data is now required
+
+if(success) dispatch({ type: SAMPLE.SUCCESS });
+
+...
+```
+
+### Custom Form Validation
+
+For custom form validation, we need to import **validator()** and **isValid()** functions from _src/utils/Utils.js_.
+
+```javascript
+import { validator, isValid } from "../utils/Validator.util";
+```
+
+Now this **validator()** function on passing empty object returns a **validate()** function which is used to validate a input form.
+
+Lets say we want to validate the form on submit:
+
+```javascript
+import { validator, isValid } from "../utils/Validator.util";
+...
+const onSubmit = () => {
+    const catchedErrors = {};
+    const validate = validator(catchedErrors);
+
+    // ...
+}
+...
+```
+
+Now **validate()** function takes three parameters, first one is key whose value will be **true** of an **object** passed to **validator()** function when second argument condition is **true**. where last parameter is an optional callback function which is called when second condition is **true**.
+
+```javascript
+import { validator, isValid } from "../utils/Validator.util";
+...
+const onSubmit = () => {
+    const catchedErrors = {};
+    const validate = validator(catchedErrors);
+
+    // VALIDATION
+    validate("firstname", image?.length === 0, () => {
+    	//.. called when condition is true.
+    });
+
+    if (!isValid(catchedErrors)) {
+        console.error(catchedErros);
+        return;
+    }
+}
+...
+```
+
+For official documentation for **react-uicomp** visit : https://react-uicomp.js.org/
