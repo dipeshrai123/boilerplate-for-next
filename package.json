@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "start": "next dev",
     "build": "next build",
-    "start": "next start"
+    "serve": "next start"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "next": "10.0.4",
+    "next-auth-navigation": "^1.0.0",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-uicomp": "^2.0.3",
+    "sass": "^1.30.0",
+    "universal-cookie": "^4.0.4"
   }
 }
