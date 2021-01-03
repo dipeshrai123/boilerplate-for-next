@@ -1,6 +1,6 @@
 # Boilerplate for next
 
-> Official boilerplate for next app with next-auth-navigaton & react-uicomp
+> Official boilerplate for next app with next-auth-navigaton
 
 ## Getting Started
 
