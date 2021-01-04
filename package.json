@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "next dev",
-    "build": "next build",
+    "build": "node patchAnimation.patch.js && next build",
     "serve": "next start"
   },
   "dependencies": {
@@ -16,5 +16,8 @@
     "react-ui-animate": "^1.0.3",
     "sass": "^1.30.0",
     "universal-cookie": "^4.0.4"
+  },
+  "devDependencies": {
+    "replace-in-file": "^6.1.0"
   }
 }
